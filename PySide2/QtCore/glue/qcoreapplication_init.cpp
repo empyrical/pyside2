@@ -2,23 +2,27 @@
 static int QCoreApplicationArgCount;
 static char** QCoreApplicationArgValues;
 
-void QCoreApplication_constructor(PyObject* self, PyObject* args, QCoreApplicationWrapper** cptr)
+bool QCoreApplicationConstructorStart(PyObject* argv)
 {
     if (QCoreApplication::instance()) {
         PyErr_SetString(PyExc_RuntimeError, "A QCoreApplication instance already exists.");
-        return;
+        return false;
     }
 
-    int numArgs = PyTuple_GET_SIZE(args);
-    if (numArgs != 1
-        || !Shiboken::sequenceToArgcArgv(PyTuple_GET_ITEM(args, 0), &QCoreApplicationArgCount, &QCoreApplicationArgValues, "PySideApp")) {
-        PyErr_BadArgument();
-        return;
-    }
+    return Shiboken::sequenceToArgcArgv(argv, &QCoreApplicationArgCount, &QCoreApplicationArgValues, "PySideApp");
+}
 
-    *cptr = new QCoreApplicationWrapper(QCoreApplicationArgCount, QCoreApplicationArgValues);
-
-    Shiboken::Object::releaseOwnership(reinterpret_cast<SbkObject*>(self));
+void QCoreApplicationConstructorEnd(PyObject* self)
+{
     PySide::registerCleanupFunction(&PySide::destroyQCoreApplication);
     Py_INCREF(self);
+}
+
+void QCoreApplicationConstructor(PyObject* self, PyObject* argv, QCoreApplicationWrapper** cptr)
+{
+    if (QCoreApplicationConstructorStart(argv)) {
+        *cptr = new QCoreApplicationWrapper(QCoreApplicationArgCount, QCoreApplicationArgValues);
+        Shiboken::Object::releaseOwnership(reinterpret_cast<SbkObject*>(self));
+        QCoreApplicationConstructorEnd(self);
+    }
 }

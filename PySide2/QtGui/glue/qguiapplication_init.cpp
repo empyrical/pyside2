@@ -1,6 +1,4 @@
-// Borrowed reference to QtGui module
-extern PyObject* moduleQtGui;
-
+// Global variables used to store argc and argv values
 static int QGuiApplicationArgCount;
 static char** QGuiApplicationArgValues;
 

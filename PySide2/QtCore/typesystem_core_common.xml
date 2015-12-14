@@ -3323,6 +3323,7 @@
     <!-- constructor documentation -->
     <inject-documentation format="target" mode="append">
 .. class:: QCoreApplication(args)
+.. class:: QCoreApplication()
 
     Constructs a Qt kernel application. Kernel applications are applications
     without a graphical user interface. These type of applications are used
@@ -3334,7 +3335,12 @@
     </inject-documentation>
     <add-function signature="QCoreApplication(PySequence)">
         <inject-code>
-            QCoreApplication_constructor(%PYSELF, args, &amp;%0);
+            QCoreApplicationConstructor(%PYSELF, %1, &amp;%0);
+        </inject-code>
+    </add-function>
+    <add-function signature="QCoreApplication()">
+        <inject-code>
+            QCoreApplicationConstructor(%PYSELF, args, &amp;%0);
         </inject-code>
     </add-function>
     <!-- blocking functions -->

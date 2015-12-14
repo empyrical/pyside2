@@ -3270,6 +3270,11 @@
             QGuiApplicationConstructor(%PYSELF, %1, &amp;%0);
         </inject-code>
     </add-function>
+    <add-function signature="QGuiApplication()">
+        <inject-code>
+            QGuiApplicationConstructor(%PYSELF, args, &amp;%0);
+        </inject-code>
+    </add-function>
     <modify-function signature="exec()" rename="exec_" allow-thread="yes"/>
     <inject-code class="native" file="glue/qguiapplication_init.cpp" position="beginning" />
 
